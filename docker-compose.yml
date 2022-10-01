@@ -15,7 +15,6 @@ services:
     restart: always
     volumes:
       -  ./public:./public
-      -  ./services:./services
     ports: 
       - 3000:3000
 
