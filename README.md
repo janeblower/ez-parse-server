@@ -1,4 +1,7 @@
 # ez-parse-server
-Запущенный сервер - https://ezserver.codehandler.ru/
-Помощь проекту - https://www.tinkoff.ru/rm/vasilevskiy.dmitriy5/cPQcX65360
-Описание и ченджлог - https://codehandler.ru/isengardarmory-siervier-parsier/
+Запущенный сервер - https://ezserver.notjyn.space/
+
+1) git clone https://github.com/janeblower/ez-parse-server
+2) cd ./ez-parse-server
+3) build -t ezserver_api	./
+4) docker-compose up -d
