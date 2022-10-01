@@ -1,199 +1,93 @@
 <!doctype html>
 <html lang="ru" class="h-100">
-
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta name="description" content="">
-	<meta name="author" content="Codehandler.ru, Дмитрий Василевский">
-	<meta name="generator" content="Jekyll v4.0.1">
-	<title>База данных персонажей игрового сервера EZWOW.org</title>
-
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css">
-	</style>
-</head>
-
-<body class="d-flex flex-column h-100">
-	<main role="main" class="flex-shrink-0">
-		<div class="container">
-			<h1 class="mt-5">БД IsengardArmory</h1>
-			<p class="lead">Сервер парсит и сохраняет в БД данные о персонажах со страниц сайта <b>ezwow</b>.
-		</div>
-	</main>
-	<hr />
-	<div class="container">
-		<div class="row">
-			<div class="col-6">
-				<p>
-					<a href="/api/generator/json" class="btn btn-success"><i class="fas fa-download"></i> JSON</a>
-					<a href="/api/generator/sql" class="btn btn-warning"><i class="fas fa-download"></i> SQL</a>
-					<a href="/api/generator/sqlzip" class="btn btn-warning"><i class="fas fa-download"></i> SQL.ZIP</a>
-					<a href="/api/generator/lua" class="btn btn-info"><i class="fas fa-download"></i> LUA</a>
-					<a href="/api/generator/addon" class="btn btn-info"><i class="fas fa-download"></i> Аддон</a>
-					<small class="form-text text-muted">Кеш файлов LUA и SQL составляет 1 час</small>
-				</p>
-			</div>
-			<div class="col-6">
-				<a href="https://github.com/slayerokk/ez-parse-server" class="btn btn-primary" target="_blank"><i class="fab fa-github"></i> GitHub</a>
-				<a href="https://ezwow.org/topic/92428-isengardarmory" class="btn btn-info" target="_blank"><i class="fab fa-wpforms"></i> Форум</a>
-				<a href="https://codehandler.ru/isengardarmory-siervier-parsier/" class="btn btn-success" target="_blank"><i class="fab fa-blogger"></i> Блог</a>
-			</div>
-		</div>
-	</div>
-	<hr />
-	<div class="container" id="app">
-		<div class="row">
-			<div class="col-6">
-				<h3>Добавить куки</h3>
-				<p>Для парсинга необходимы куси от ezwow. Пожалуйста, поделитесь куками любого аккаунта и они будут использованы для парсинга.</p>
-				<form>
-					<div class="form-group">
-					  <input type="text" class="form-control" v-model="cooks.cookie">
-					  <small class="form-text text-muted">Данные куки, например: isengardPortalArticlePage-0=124336; member_id=1004795; ....</small>
-					</div>
-					<button @click.prevent="share" class="btn btn-primary">Отправить</button>
-				</form>
-				<hr>
-				<div class="alert alert-info" role="alert" v-show="message.length">
-					{{ message }}
-				</div>
-			</div>
-			<div class="col-6">
-				<h3>Статистика</h3>
-				<p>
-					<b>Позиция парсера:</b> {{ data.position }} ({{ percent }}%)<br>
-					<b>Задержка парсера, с:</b> 60<br>
-					<b>Макс. смещение:</b> {{ data.ezwow.maxSt }}<br>
-					<b>Персонажей в БД:</b> {{ data.characters }}<br>
-					<b>Кукисов в БД:</b> {{ data.cookies }}<br>
-					<a href="https://www.tinkoff.ru/rm/vasilevskiy.dmitriy5/cPQcX65360" target="_blank">Увеличить хозяйство</a>
-				</p>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-12">
-				<h4>Персонажи по расам</h4>
-				<table class="table table-bordered">
-					<thead>
-					  <tr>
-						<th scope="col">Человек</th>
-						<th scope="col">Дворф</th>
-						<th scope="col">Найтэльф</th>
-						<th scope="col">Гном</th>
-						<th scope="col">Дреней</th>
-						<th scope="col">Орк</th>
-						<th scope="col">Нежить</th>
-						<th scope="col">Таурен</th>
-						<th scope="col">Тролль</th>
-						<th scope="col">Бладэльф</th>
-					  </tr>
-					</thead>
-					<tbody>
-					  <tr>
-						<td v-for="(count, index) in data.races">{{ count }}</td>
-					  </tr>
-					</tbody>
-				  </table>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-12">
-				<h4>Персонажи по классам</h4>
-				<table class="table table-bordered">
-					<thead>
-					  <tr>
-						<th scope="col">Охотник</th>
-						<th scope="col">Чернокнижник</th>
-						<th scope="col">Жрец</th>
-						<th scope="col">Паладин</th>
-						<th scope="col">Маг</th>
-						<th scope="col">Разбойник</th>
-						<th scope="col">Друид</th>
-						<th scope="col">Шаман</th>
-						<th scope="col">Воин</th>
-						<th scope="col">ДК</th>
-					  </tr>
-					</thead>
-					<tbody>
-					  <tr>
-						<td v-for="(count, index) in data.classes">{{ count }}</td>
-					  </tr>
-					</tbody>
-				  </table>
-			</div>
-		</div>
-	</div>
-
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
-
-	<script>
-		var app = new Vue({
-			el: '#app',
-			data() {
-				return {
-					cooks: {
-						cookie: ''
-					},
-					message: '',
-					data: {
-						position: 0,
-						ezwow: {
-							maxSt: 111000
-						},
-						cookies: 0,
-						characters: 0,
-						races: [],
-						classes: []
-					}
-				}
-			},
-			computed: {
-				percent() {
-					const { position, ezwow: {maxSt} } = this.data
-					if (maxSt == 0) return 0
-					return Math.round(position/maxSt*100)
-				}
-			},
-			methods: {
-				async share(){
-					try {
-						await axios.post('/api/cookie/create', this.cooks)
-						this.cooks.cookie = ''
-						this.message = 'Спасибо!'
-					} catch (error) {
-						console.log(error)
-					}
-				}
-			},
-			async mounted() {
-				try {
-					const { data } = await axios.get('/api/stat/get')
-					this.data = data
-				} catch (error) {
-					console.log(error)
-				}
-			}
-		})
-	</script>
-
-	<!-- Yandex.Metrika counter -->
-	<script type="text/javascript" >
-		(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-		m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-		(window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
-	
-		ym(66000916, "init", {
-			clickmap:true,
-			trackLinks:true,
-			accurateTrackBounce:true,
-			webvisor:true
-		});
-	</script>
-	<noscript><div><img src="https://mc.yandex.ru/watch/66000916" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-	<!-- /Yandex.Metrika counter -->
-
-</body>
-
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <title>IsengardArmory</title>
+        <link rel="icon" type="image/x-icon" href="./img/favicon.ico">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+        <link href="./css/histo.css" rel="stylesheet" type="text/css">
+        <link href="./css/main.css" rel="stylesheet" type="text/css">
+    </head>
+    <body class="d-flex flex-column h-100">
+        <main role="main" class="flex-shrink-0">
+            <div class="container">
+                <h1 class="mt-5">БД IsengardArmory</h1>
+                <p class="lead">Сервер парсит и сохраняет в БД данные о персонажах со страниц сайта <b>ezwow</b>. </p>
+            </div>
+        </main>
+        <div class="container" id="app">
+            <div class="row">
+                <div class="col-md-6">
+                    <h3>Статистика</h3>
+                    <p class="stats">
+                        <b>Позиция парсера:</b><span> {{ data.position }} ({{ percent }}%)</span>
+                        <br>
+                        <b>Задержка парсера, с:</b><span> 60</span>
+                        <br>
+                        <b>Макс. смещение:</b><span> {{ data.ezwow.maxSt }}</span>
+                        <br>
+                        <b>Персонажей в БД:</b><span> {{ data.characters }}</span>
+                        <br>
+                        <b>Кукисов в БД:</b><span> {{ data.cookies }}</span>
+                    </p>
+                    <div>
+                        <div class="col">
+                            <div class="row">
+                                <a href="/api/generator/lua" class="btn btn-info"><i class="fas fa-download"></i> LUA</a>
+                                <a href="/api/generator/addon" class="btn btn-warning mx-3"><i class="fas fa-download"></i> Аддон</a>
+                            </div>
+                            <small class="form-text text-muted">Кеш LUA составляет 1 час</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h3>Добавить куки</h3>
+                    <p>Для парсинга необходимы куси от ezwow. Пожалуйста, поделитесь куками любого аккаунта и они будут использованы для парсинга.</p>
+                    <form>
+                        <div class="form-group">
+                            <input type="text" class="form-control" v-model="cooks.cookie">
+                            <small class="form-text text-muted">Данные куки, например: isengardPortalArticlePage-0=124336; member_id=1004795; ....</small>
+                        </div>
+                        <button @click.prevent="share" class="btn btn-primary">Отправить</button>
+                    </form>
+                    <div class="alert alert-info" role="alert" v-show="message.length">
+                        {{ message }}
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="row graphs">
+                <div class="col-md-6">
+                    <h4>Персонажи по расам</h4>
+                    <div class="line" v-for="(element, index) in data.races" :style="'width: ' + element.width + '%;'" :title="element.name">
+                        <div class="icon">
+                            <img :src="'./img/races_' + element.id + '.png'">
+                        </div>
+                        <div class="graph" :id="'class-'+ element.id">
+                            <span class="mx-2">{{element.value }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h4>Персонажи по классам</h4>
+                    <div class="line" v-for="(element, index) in data.classes" :style="'width: ' + element.width + '%;'" :title="element.name">
+                        <div class="icon">
+                            <img :src="'./img/classes_' + element.id + '.png'">
+                        </div>
+                        <div class="graph" :id="'class-'+ element.id">
+                            <span class="mx-2">{{element.value }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+		<br>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
+        <script src="./js/main.js"></script>
+    </body>
 </html>
