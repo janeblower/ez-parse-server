@@ -1,0 +1,46 @@
+html {
+  overflow-y: scroll;
+}
+#app {
+	box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);
+	padding: 30px;
+	width: 95%;
+}
+
+
+.stats span {
+    transition: 1s all ease;
+    opacity: 0;
+}
+
+
+.show-stats .stats span {
+    opacity: 1;
+}
+
+.line {
+    width: 70%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+
+.jopa {
+	min-width: 50%;
+	flex-grow: 1;
+}
+.pizda {
+	width: 50%;
+}
+
+#app > div {
+	display: flex;
+	flex-wrap: wrap;
+
+}
+
+@media (min-width: 1200px)
+.container {
+    max-width: 960px !important; 
+}
