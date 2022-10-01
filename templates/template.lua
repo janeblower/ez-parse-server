@@ -94,7 +94,7 @@ SLASH_ARMORY1, SLASH_ARMORY2 = '/ar', '/armory'
 
 SlashCmdList["ARMORY"] = function (MESSAGE)
     print(" ")
-    print(TEXT_COLOR("EZWoW.org Оружейная 2.0, (с) Border", 10))
+    print(TEXT_COLOR("Isengard Armory", 10))
     print(TEXT_COLOR("База от <%- date %>", 10))
     print(TEXT_COLOR("Cодержит аккаунтов - "..TEXT_COLOR("<%- accounts %>", 3)..", персонажей - "..TEXT_COLOR("<%- characters %>", 3), 10))
 
