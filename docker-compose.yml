@@ -14,8 +14,10 @@ services:
       - ezserver_mongo
     restart: always
     volumes:
-      -  ./public:./public
-    ports: 
+      -  ./public:/root/ez-parse-server-master/public
+      -  ./services:/root/ez-parse-server-master/services
+      -  ./templates:/root/ez-parse-server-master/templates
+    ports:
       - 3000:3000
 
   ezserver_redis:
