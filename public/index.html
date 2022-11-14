@@ -6,8 +6,7 @@
         <meta name="description" content="">
         <title>IsengardArmory</title>
         <link rel="icon" type="image/x-icon" href="./img/favicon.ico">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">       
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
         <link href="./css/histo.css" rel="stylesheet" type="text/css">
         <link href="./css/main.css" rel="stylesheet" type="text/css">
@@ -35,13 +34,13 @@
                         <b>Кукисов в БД:</b><span> {{ data.cookies }}</span>
                     </p>
                     <div>
-                        <div class="col">
-                            <div class="row">
-                                <a href="/api/generator/lua" class="btn btn-info"><i class="fas fa-download"></i> LUA</a>
-                                <a href="/api/generator/addon" class="btn btn-warning mx-3"><i class="fas fa-download"></i> Аддон</a>
-                            </div>
-                            <small class="form-text text-muted">Кеш LUA составляет 1 час</small>
+                        <div class="row">
+                            <a href="/api/generator/addon" class="btn btn-warning mx-3">
+								<img src="./img/download.svg" alt="Download" style="height: 18px">
+								Аддон
+							</a>
                         </div>
+                        <small class="form-text text-muted">Кеш LUA составляет 1 час</small>
                     </div>
                 </div>
                 <div class="col-md-6">
