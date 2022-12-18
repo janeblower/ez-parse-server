@@ -161,6 +161,12 @@ export default {
 					//если загрузчик упал с ошибкой 403, значит кука протухла
 					if (error.response.status == 403)
 						await ctx.call('cookie.remove', {_id: cookie._id})
+					if (error.response.status == 500) {
+						this.logger.info(`Error 500 with st = ${ctx.params.st}.`)
+						return {
+							st: ctx.params.st //переданное смещение
+						}
+					}
 				}
 			}
 		}
