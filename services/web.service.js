@@ -36,10 +36,8 @@ export default {
 				'GET /character/count': 'character.count',
 				'GET /generator/json': 'generator.json',
 				'GET /generator/sql': 'generator.sql',
-				'GET /generator/sqlzip': 'generator.sqlzip',
-				'GET /generator/toc': 'generator.toc',
-				'GET /generator/lua': 'generator.lua',
 				'GET /generator/addon': 'generator.addon',
+				'GET /generator/addon80': 'generator.addon80',
 				'GET /stat/get': 'stat.get'
 			},
 			bodyParsers: {
@@ -48,7 +46,7 @@ export default {
 			},
 			mappingPolicy: 'restrict'
 		}]
-		
+
 	}
 
 }
