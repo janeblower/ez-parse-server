@@ -20,7 +20,7 @@
 	},
 	"homepage": "https://github.com/slayerokk/ez-parse-server#readme",
 	"dependencies": {
-		"@moleculer/database": "github:moleculerjs/database",
+		"@moleculer/database": "^0.1.0",
 		"adm-zip": "^0.5.9",
 		"axios": "^0.26.1",
 		"cheerio": "^1.0.0-rc.10",
