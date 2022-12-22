@@ -71,11 +71,13 @@ export default {
             async handler(ctx) {
                 const { params } = ctx;
                 const { name } = params;
-
                 const character = (await ctx.call("character.find", { query: { name } }))[0];
-                const characters = await ctx.call("character.find", { query: { login: character.login } });
-
-                return characters;
+                if (character && character.login) {
+                    const characters = await ctx.call("character.find", { query: { login: character.login } });
+                    return characters;
+                } else {
+                    return false;
+                }
             },
         },
 

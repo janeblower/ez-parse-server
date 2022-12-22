@@ -6,6 +6,8 @@ const app = new Vue({
                 cookie: "",
             },
             message: "",
+            findInput: "",
+            findOutput: [],
             data: {
                 position: 0,
                 ezwow: {
@@ -37,6 +39,15 @@ const app = new Vue({
             } catch (error) {
                 console.log(error);
             }
+        },
+        async findByName() {
+            const findInput = this.findInput.charAt(0).toUpperCase() + this.findInput.slice(1);
+            const { data } = await axios.get(`/api/character/findByName?name=${findInput}`);
+            if (data === false) {
+                alert("Не удалось найти персонажа по имени!");
+                return;
+            }
+            this.findOutput = data;
         },
     },
     async mounted() {
