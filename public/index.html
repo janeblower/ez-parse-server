@@ -11,10 +11,6 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
         <link href="./css/histo.css" rel="stylesheet" type="text/css">
         <link href="./css/main.css" rel="stylesheet" type="text/css">
-		<!-- Yandex.Metrika counter -->
-		<script src="./js/metrika.js" ></script>
-		<noscript><div><img src="https://mc.yandex.ru/watch/90487820" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-		<!-- /Yandex.Metrika counter -->
     </head>
     <body class="d-flex flex-column h-100">
         <main role="main" class="flex-shrink-0">
@@ -71,20 +67,23 @@
             <div class="row">
                 <form>
                     <div class="form-group">
-                        <input type="text" class="form-control" v-model="findInput">
-                        <small class="form-text text-muted">Поиск всех персонажей человека</small>
+                        <input type="text" placeholder="Имя персонажа" class="form-control" v-model="findInput">
+                        <small class="form-text text-muted">Поиск всех персонажей</small>
                     </div>
-                    <button @click.prevent="findByName" class="btn btn-primary">Отправить</button>
+                    <button @click.prevent="findByName" class="btn btn-primary">Найти</button>
                 </form>
-                <div v-for="item in findOutput">
-                    <div>Login: {{ item.login }}</div>
-                    <div>Имя: {{ item.name }}</div>
-                    <img :src="'./img/classes_' + item.class + '.png'">
-                    <img :src="'./img/races_' + item.race + '.png'">
-                    <div>Lvl: {{ item.lvl }}</div>
-                    <div>Имя: {{ item.kills }}</div>
-                    <div>Имя: {{ item.gs }}</div>
-                    <div>Имя: {{ item.ap }}</div>
+                <div class="findOutput col-3" id="chars">
+                    <a>Логин: {{ data.login }}</a>
+                    <div class="charOutput" v-for="item in findOutput">
+                        <a>Имя: {{ item.name }}</a>
+                        <img class="icon" :src="'./img/classes_' + item.class + '.png'">
+                        <img class="icon" :src="'./img/races_' + item.race + '.png'">
+                        <a>LvL: {{ item.lvl }}</a>
+                        <a>Убийства: {{ item.kills }}</a>
+                        <a>GS: {{ item.gs }}</a>
+                        <a>АП: {{ item.ap }}</a>
+                    </div>
+                    <button @click="charsHide" class="closeChars"></button>
                 </div>
             </div>
             <hr>
@@ -92,8 +91,8 @@
                 <div class="col-md-6">
                     <h4>Персонажи по расам</h4>
                     <div class="line" v-for="(element, index) in data.races" :style="'width: ' + element.width + '%;'" :title="element.name">
-                        <div class="icon">
-                            <img :src="'./img/races_' + element.id + '.png'">
+                        <div>
+                            <img class="icon"  :src="'./img/races_' + element.id + '.png'">
                         </div>
                         <div class="graph" :id="'class-'+ element.id">
                             <span class="mx-2">{{element.value }}</span>
@@ -103,8 +102,8 @@
                 <div class="col-md-6">
                     <h4>Персонажи по классам</h4>
                     <div class="line" v-for="(element, index) in data.classes" :style="'width: ' + element.width + '%;'" :title="element.name">
-                        <div class="icon">
-                            <img :src="'./img/classes_' + element.id + '.png'">
+                        <div>
+                            <img class="icon" :src="'./img/classes_' + element.id + '.png'">
                         </div>
                         <div class="graph" :id="'class-'+ element.id">
                             <span class="mx-2">{{element.value }}</span>

@@ -48,6 +48,9 @@ const app = new Vue({
                 return;
             }
             this.findOutput = data;
+            const x = document.getElementById("chars");
+            x.style.display = "flex";
+            this.data.login = data[1].login;
         },
     },
     async mounted() {
@@ -62,9 +65,15 @@ const app = new Vue({
                 data.classes[i].width = (data.classes[i].value / data.classes[0].value) * 90;
             }
             document.body.classList.add("show-stats");
+            this.data.login = "";
             this.data = data;
         } catch (error) {
             console.log(error);
         }
     },
 });
+
+function charsHide() {
+    const x = document.getElementById("chars");
+    x.style.display = "none";
+}
