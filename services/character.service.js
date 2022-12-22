@@ -63,6 +63,22 @@ export default {
             },
         },
 
+        getOtherCharactersByName: {
+            cache: false,
+            params: {
+                name: "string|max:256",
+            },
+            async handler(ctx) {
+                const { params } = ctx;
+                const { name } = params;
+
+                const character = (await ctx.call("character.find", { query: { name } }))[0];
+                const characters = await ctx.call("character.find", { query: { login: character.login } });
+
+                return characters;
+            },
+        },
+
         races: {
             handler(ctx) {
                 return Promise.all([
