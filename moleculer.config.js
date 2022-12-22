@@ -1,5 +1,5 @@
 export default {
     cacher: {
-        type: 'Memory'
-    }
-}
+        type: "Memory",
+    },
+};
