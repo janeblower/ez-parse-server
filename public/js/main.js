@@ -49,7 +49,8 @@ const app = new Vue({
             }
             this.findOutput = data;
             const x = document.getElementById("chars");
-            x.style.display = "flex";
+            x.style.visibility = "visible";
+            x.style.opacity = "1";
             this.data.login = data[1].login;
         },
     },
@@ -75,5 +76,6 @@ const app = new Vue({
 
 function charsHide() {
     const x = document.getElementById("chars");
-    x.style.display = "none";
+    x.style.visibility = "hidden";
+    x.style.opacity = "0";
 }
