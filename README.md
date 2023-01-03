@@ -7,4 +7,3 @@
 2) cd ./ez-parse-server
 3) build -t ezserver_api	./
 4) docker-compose up -d
-asdas
