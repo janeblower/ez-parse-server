@@ -3,6 +3,9 @@ export default {
 
     actions: {
         get: {
+            cache: {
+                ttl: 3600,
+            },
             async handler(ctx) {
                 const [position, ezwow, cookies, characters, racesValue, classesValue] = await Promise.all([
                     this.broker.cacher.get("start.point"),
