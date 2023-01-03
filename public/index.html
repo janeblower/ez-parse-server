@@ -43,7 +43,7 @@
         </div>
     </main>
     <div class="container" id="app">
-        <div class="row">
+        <div class="row first">
             <div class="col-md-3">
                 <h3>Статистика</h3>
                 <p class="stats">
@@ -58,7 +58,7 @@
                     <b>Кукисов в БД:</b><span> {{ data.cookies }}</span>
                 </p>
                 <div>
-                    <div class="row">
+                    <div class="row actions">
                         <a href="/api/generator/addon" class="btn btn-warning mx-2">
                             <img src="./img/download.svg" alt="Download" style="height: 18px">
                             FULL
@@ -73,7 +73,7 @@
             <div class="col-md-3">
                 <h3>Поиск онлайн</h3>
                 <p>Так же, как и в аддоне, только на сайте.</p>
-                <form>
+                <form class="actions">
                     <div class="form-group">
                         <input type="text" placeholder="Имя персонажа" class="form-control" v-model="findInput">
                     </div>
@@ -84,9 +84,11 @@
                 <h3>Добавить куки</h3>
                 <p>Для парсинга необходимы куси от ezwow. Пожалуйста, поделитесь куками любого аккаунта и они будут
                     использованы для парсинга.</p>
-                <form>
+                <form class="actions cookie-form">
                     <div class="form-group">
-                        <input type="text" placeholder="_ga=GAXXX; _ym_uid=XXX; _ym_d=XXX; member_id=XXX; pass_hash=XXX..." class="form-control" v-model="cooks.cookie">
+                        <input type="text"
+                            placeholder="_ga=GAXXX; _ym_uid=XXX; _ym_d=XXX; member_id=XXX; pass_hash=XXX..."
+                            class="form-control" v-model="cooks.cookie">
                     </div>
                     <button @click.prevent="share" class="btn btn-primary">Отправить</button>
                     <a href="./img/cookie.png" class="btn btn-warning mx-2">Где взять куки?</a>

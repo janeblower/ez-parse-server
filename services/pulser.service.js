@@ -13,7 +13,10 @@ export default {
                 // получить из кеша сервера позицию смещения, либо 0
                 let st = (await this.broker.cacher.get("start.point")) || 0;
                 // если позиция смещения в кеше больше максимального смещения, обнулить ее
-                if (st > stat.maxSt) st = 0;
+                if (st > stat.maxSt) {
+                    st = 0;
+                    // await this.broker.call("generator.addon80ZipCreate");
+                }
                 // загрузить данные персонажей по смещению st, экшн также внесет их в БД
                 await this.broker.call("ezwow.parse", { st });
                 // увеличить смещение

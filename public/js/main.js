@@ -51,7 +51,7 @@ const app = new Vue({
             const x = document.getElementById("chars");
             x.style.visibility = "visible";
             x.style.opacity = "1";
-            this.data.login = data[1].login;
+            this.data.login = data[0].login;
         },
     },
     async mounted() {

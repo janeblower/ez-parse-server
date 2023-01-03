@@ -122,17 +122,17 @@ export default {
                         "utf8"
                     )
                 );
-                async function createZipArchive() {
-                    try {
-                        const outputFile = "/root/ez-parse-server-master/public/files/test.zip";
-                        zip.writeZip(outputFile);
-                        console.log(`Created ${outputFile} successfully`);
-                    } catch (e) {
-                        console.log(`Something went wrong. ${e}`);
-                    }
-                }
+                // async function createZipArchive() {
+                //     try {
+                //         const outputFile = "/root/ez-parse-server-master/public/files/test.zip";
+                //         zip.writeZip(outputFile);
+                //         console.log(`Created ${outputFile} successfully`);
+                //     } catch (e) {
+                //         console.log(`Something went wrong. ${e}`);
+                //     }
+                // }
 
-                createZipArchive();
+                // createZipArchive();
 
                 return zip.toBuffer();
             },
