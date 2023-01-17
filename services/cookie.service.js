@@ -29,6 +29,7 @@ export default {
             async handler(ctx) {
                 const cookie = await ctx.call("cookie.find", { limit: 1, sort: "-createdAt" }, { meta: { $cache: false } });
                 if (cookie.length == 0) throw new Errors.MoleculerError("Нет доступных кукисов", 404, "THERE_ARE_NO_COOKIES");
+               
                 return cookie[0];
             },
         },
