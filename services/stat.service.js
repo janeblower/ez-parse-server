@@ -8,9 +8,9 @@ export default {
                     this.broker.cacher.get("start.point"),
                     ctx.call("ezwow.stat"),
                     ctx.call("cookie.count"),
-                    ctx.call("character.count"),
-                    ctx.call("character.races"),
-                    ctx.call("character.classes"),
+                    ctx.call("characterSearch.count"),
+                    ctx.call("characterSearch.races"),
+                    ctx.call("characterSearch.classes"),
                 ]);
 
                 const races = [];
@@ -59,5 +59,7 @@ export default {
                 };
             },
         },
+
+        
     },
 };

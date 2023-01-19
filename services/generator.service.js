@@ -1,4 +1,3 @@
-import { Readable } from "stream";
 import path from "path";
 import { promises as fs } from "fs";
 import _ from "lodash";
@@ -8,46 +7,8 @@ export default {
     name: "generator",
 
     actions: {
-        json: {
-            params: {
-                filename: "string|max:256|optional|default:IsengardArmory.json",
-            },
-            async handler(ctx) {
-                ctx.meta.$responseType = "application/json";
-                ctx.meta.$responseHeaders = {
-                    "Content-Disposition": `attachment; filename="${ctx.params.filename}"`,
-                };
-                const data = await ctx.call("character.find");
-                const stream = new Readable();
-                stream.push(JSON.stringify({ characters: data }));
-                stream.push(null);
-                return stream;
-            },
-        },
-
-        sql: {
-            params: {
-                filename: "string|max:256|optional|default:IsengardArmory.sql",
-            },
-            async handler(ctx) {
-                ctx.meta.$responseType = "application/sql";
-                ctx.meta.$responseHeaders = {
-                    "Content-Disposition": `attachment; filename="${ctx.params.filename}"`,
-                };
-                const characters = await ctx.call("character.find");
-                const stream = new Readable();
-                stream.push(this.SQLTemplate({ characters }));
-                stream.push(null);
-                return stream;
-            },
-        },
-
         addon80: {
             async handler(ctx) {
-                ctx.meta.$responseType = "application/zip";
-                ctx.meta.$responseHeaders = {
-                    "Content-Disposition": `attachment; filename="IsengardArmory.zip"`,
-                };
                 const characters = await ctx.call("character.find", { sort: "login" });
                 const characters80 = [];
                 for (let i = 0; i < characters.length; i++) {
@@ -122,19 +83,13 @@ export default {
                         "utf8"
                     )
                 );
-                // async function createZipArchive() {
-                //     try {
-                //         const outputFile = "/root/ez-parse-server-master/public/files/test.zip";
-                //         zip.writeZip(outputFile);
-                //         console.log(`Created ${outputFile} successfully`);
-                //     } catch (e) {
-                //         console.log(`Something went wrong. ${e}`);
-                //     }
-                // }
 
-                // createZipArchive();
-
-                return zip.toBuffer();
+                try {
+                    zip.writeZip(path.resolve(process.cwd(), "public/files/IsengardArmoryLite.zip"));
+                    console.log(`Created IsengardArmoryLite successfully`);
+                } catch (e) {
+                    console.log(`Something went wrong. ${e}`);
+                }
             },
         },
 
@@ -212,13 +167,17 @@ export default {
                     )
                 );
 
-                return zip.toBuffer();
+                try {
+                    zip.writeZip(path.resolve(process.cwd(), "public/files/IsengardArmory.zip"));
+                    console.log(`Created IsengardArmory successfully`);
+                } catch (e) {
+                    console.log(`Something went wrong. ${e}`);
+                }
             },
         },
     },
 
     async started() {
-        this.SQLTemplate = _.template(Buffer.from(await fs.readFile(path.resolve(__dirname, "../templates/template.sql"))));
         this.TOCTemplate = _.template(Buffer.from(await fs.readFile(path.resolve(__dirname, "../templates/template.toc"))));
         this.LUATemplate = _.template(Buffer.from(await fs.readFile(path.resolve(__dirname, "../templates/template.lua"))));
         this.LUADBTemplate = _.template(Buffer.from(await fs.readFile(path.resolve(__dirname, "../templates/DBTemplate.lua"))));

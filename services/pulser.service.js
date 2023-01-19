@@ -1,4 +1,13 @@
 import queue from "moleculer-bull";
+import { MongoClient } from "mongodb";
+
+const dbClient = new MongoClient(process.env.DATABASE);
+let db;
+
+(async function () {
+    await dbClient.connect();
+    db = dbClient.db("ezwow");
+})();
 
 export default {
     name: "pulser",
@@ -13,9 +22,14 @@ export default {
                 // получить из кеша сервера позицию смещения, либо 0
                 let st = (await this.broker.cacher.get("start.point")) || 0;
                 // если позиция смещения в кеше больше максимального смещения, обнулить ее
-                if (st > stat.maxSt) {
+                if (typeof stat.maxSt === "number" && st > stat.maxSt) {
                     st = 0;
-                    // await this.broker.call("generator.addon80ZipCreate");
+
+                    await this.broker.call("generator.addon80");
+                    await this.broker.call("generator.addon");
+
+                    await db.collection("characterSearch").drop();
+                    await db.renameCollection("character", "characterSearch");
                 }
                 // загрузить данные персонажей по смещению st, экшн также внесет их в БД
                 await this.broker.call("ezwow.parse", { st });
