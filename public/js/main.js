@@ -41,7 +41,9 @@ const app = new Vue({
             }
         },
         async findByName() {
-            const findInput = this.findInput.charAt(0).toUpperCase() + this.findInput.slice(1);
+            let findInput = this.findInput.trim();
+            findInput = findInput.charAt(0).toUpperCase() + findInput.slice(1);
+            console.log(findInput);
             const { data } = await axios.get(`/api/character/findByName?name=${findInput}`);
             if (data === false) {
                 alert("Не удалось найти персонажа по имени!");

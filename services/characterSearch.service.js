@@ -56,16 +56,16 @@ export default {
         races: {
             handler(ctx) {
                 return Promise.all([
-                    ctx.call("character.count", { query: { race: 0 } }),
-                    ctx.call("character.count", { query: { race: 1 } }),
-                    ctx.call("character.count", { query: { race: 2 } }),
-                    ctx.call("character.count", { query: { race: 3 } }),
-                    ctx.call("character.count", { query: { race: 4 } }),
-                    ctx.call("character.count", { query: { race: 5 } }),
-                    ctx.call("character.count", { query: { race: 6 } }),
-                    ctx.call("character.count", { query: { race: 7 } }),
-                    ctx.call("character.count", { query: { race: 8 } }),
-                    ctx.call("character.count", { query: { race: 9 } }),
+                    ctx.call("characterSearch.count", { query: { race: 0 } }),
+                    ctx.call("characterSearch.count", { query: { race: 1 } }),
+                    ctx.call("characterSearch.count", { query: { race: 2 } }),
+                    ctx.call("characterSearch.count", { query: { race: 3 } }),
+                    ctx.call("characterSearch.count", { query: { race: 4 } }),
+                    ctx.call("characterSearch.count", { query: { race: 5 } }),
+                    ctx.call("characterSearch.count", { query: { race: 6 } }),
+                    ctx.call("characterSearch.count", { query: { race: 7 } }),
+                    ctx.call("characterSearch.count", { query: { race: 8 } }),
+                    ctx.call("characterSearch.count", { query: { race: 9 } }),
                 ]);
             },
         },
@@ -73,16 +73,16 @@ export default {
         classes: {
             handler(ctx) {
                 return Promise.all([
-                    ctx.call("character.count", { query: { class: 0 } }),
-                    ctx.call("character.count", { query: { class: 1 } }),
-                    ctx.call("character.count", { query: { class: 2 } }),
-                    ctx.call("character.count", { query: { class: 3 } }),
-                    ctx.call("character.count", { query: { class: 4 } }),
-                    ctx.call("character.count", { query: { class: 5 } }),
-                    ctx.call("character.count", { query: { class: 6 } }),
-                    ctx.call("character.count", { query: { class: 7 } }),
-                    ctx.call("character.count", { query: { class: 8 } }),
-                    ctx.call("character.count", { query: { class: 9 } }),
+                    ctx.call("characterSearch.count", { query: { class: 0 } }),
+                    ctx.call("characterSearch.count", { query: { class: 1 } }),
+                    ctx.call("characterSearch.count", { query: { class: 2 } }),
+                    ctx.call("characterSearch.count", { query: { class: 3 } }),
+                    ctx.call("characterSearch.count", { query: { class: 4 } }),
+                    ctx.call("characterSearch.count", { query: { class: 5 } }),
+                    ctx.call("characterSearch.count", { query: { class: 6 } }),
+                    ctx.call("characterSearch.count", { query: { class: 7 } }),
+                    ctx.call("characterSearch.count", { query: { class: 8 } }),
+                    ctx.call("characterSearch.count", { query: { class: 9 } }),
                 ]);
             },
         },

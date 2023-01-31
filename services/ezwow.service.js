@@ -2,6 +2,15 @@ import cheerio from "cheerio";
 import { URLSearchParams } from "url";
 import axios from "axios";
 import _ from "lodash";
+import { MongoClient } from "mongodb";
+
+const dbClient = new MongoClient(process.env.DATABASE);
+let db;
+
+(async function () {
+    await dbClient.connect();
+    db = dbClient.db("ezwow");
+})();
 
 export default {
     name: "ezwow",
@@ -50,153 +59,167 @@ export default {
                 st: "number|min:0|convert|default:0",
             },
             async handler(ctx) {
-                this.logger.info(`Parse with st = ${ctx.params.st}...`);
+                
                 // загрузить данные с сервера езвов
-                const data = await ctx.call("ezwow.get", ctx.params);
-                // создать парсер на основе данных
-                const parser = cheerio.load(data);
-                const persons = [];
-                parser(".ipb_table tr.character").each(function () {
-                    const person = {};
-                    // race
-                    const raceImgSrc = parser(this).find("img.character-race").attr("src").split("/");
-                    const raceImgFile = raceImgSrc[raceImgSrc.length - 1];
-                    switch (raceImgFile) {
-                        case "1-0.png":
-                            person.race = 0;
-                            break;
-                        case "1-1.png":
-                            person.race = 0;
-                            break;
-                        case "3-0.png":
-                            person.race = 1;
-                            break;
-                        case "3-1.png":
-                            person.race = 1;
-                            break;
-                        case "4-0.png":
-                            person.race = 2;
-                            break;
-                        case "4-1.png":
-                            person.race = 2;
-                            break;
-                        case "7-0.png":
-                            person.race = 3;
-                            break;
-                        case "7-1.png":
-                            person.race = 3;
-                            break;
-                        case "11-1.png":
-                            person.race = 4;
-                            break;
-                        case "11-0.png":
-                            person.race = 4;
-                            break;
-                        case "2-0.png":
-                            person.race = 5;
-                            break;
-                        case "2-1.png":
-                            person.race = 5;
-                            break;
-                        case "5-0.png":
-                            person.race = 6;
-                            break;
-                        case "5-1.png":
-                            person.race = 6;
-                            break;
-                        case "6-0.png":
-                            person.race = 7;
-                            break;
-                        case "6-1.png":
-                            person.race = 7;
-                            break;
-                        case "8-0.png":
-                            person.race = 8;
-                            break;
-                        case "8-1.png":
-                            person.race = 8;
-                            break;
-                        case "10-0.png":
-                            person.race = 9;
-                            break;
-                        case "10-1.png":
-                            person.race = 9;
-                            break;
-                        default:
-                            person.race = 0;
-                            break;
-                    }
-                    // class
-                    const classImgSrc = parser(this).find("img.character-class").attr("src").split("/");
-                    const classImgFile = classImgSrc[classImgSrc.length - 1];
-                    switch (classImgFile) {
-                        case "3.png":
-                            person.class = 0;
-                            break;
-                        case "9.png":
-                            person.class = 1;
-                            break;
-                        case "5.png":
-                            person.class = 2;
-                            break;
-                        case "2.png":
-                            person.class = 3;
-                            break;
-                        case "8.png":
-                            person.class = 4;
-                            break;
-                        case "4.png":
-                            person.class = 5;
-                            break;
-                        case "11.png":
-                            person.class = 6;
-                            break;
-                        case "7.png":
-                            person.class = 7;
-                            break;
-                        case "1.png":
-                            person.class = 8;
-                            break;
-                        case "6.png":
-                            person.class = 9;
-                            break;
-                        default:
-                            person.class = 0;
-                            break;
-                    }
-                    // name
-                    const name1 = parser(this).find(".character-name").children().first().children().first().text();
-                    const name2 = parser(this).children().first().children().last().text();
-                    person.name = name1 || name2;
-                    // guild
-                    person.guild = parser(this).find(".guild-name").children().first().text();
-                    // login
-                    person.login = parser(this).find('span[itemprop="name"]').text();
-                    // other
-                    parser(this)
-                        .find("td")
-                        .each(function (index, element) {
-                            if (index == 2) person.lvl = Number(parser(element).text().trim().replace(/\s/g, ""));
-                            if (index == 3) person.kills = Number(parser(element).text().trim().replace(/\s/g, ""));
-                            if (index == 6) person.ap = Number(parser(element).text().trim().replace(/\s/g, ""));
-                        });
-                    // gs
-                    person.gs = Number(parser(this).find(".gearscore > .value").text().trim().replace(/\s/g, ""));
-                    persons.push(person);
-                });
-                // исключить из массива persons записи с отсутствующими данными
-                const rows = _.filter(
-                    persons,
-                    (person) => person.race >= 0 && person.class >= 0 && person.name && person.login && person.lvl
-                );
-                this.logger.info(`Parsed ${rows.length} characters.`);
-                // пришла новая инфа о персонажах
-                await Promise.allSettled(rows.map((row) => ctx.call("character.updateOrCreate", row)));
-                // вернуть результат
-                return {
-                    rows, // массив
-                    count: persons.length, // длина массива
-                    st: ctx.params.st, // переданное смещение
+                const stat = await ctx.call("ezwow.stat");
+                if (typeof stat.maxSt === "number" && ctx.params.st > stat.maxSt) {
+                    this.logger.info(`Drop & Raname`);
+                    await this.broker.call("generator.addon80");
+                    await this.broker.call("generator.addon");
+                    await this.broker.cacher.set("start.point", 0);
+                    try {
+                        await db.collection("characterSearch").drop();
+                    } catch (e) { }
+                    await db.renameCollection("character", "characterSearch");
+                }
+                else {
+                    this.logger.info(`Parse with st = ${ctx.params.st}...`);
+                    const data = await ctx.call("ezwow.get", ctx.params);
+                    // создать парсер на основе данных
+                    const parser = cheerio.load(data);
+                    const persons = [];
+                    parser(".ipb_table tr.character").each(function () {
+                        const person = {};
+                        // race
+                        const raceImgSrc = parser(this).find("img.character-race").attr("src").split("/");
+                        const raceImgFile = raceImgSrc[raceImgSrc.length - 1];
+                        switch (raceImgFile) {
+                            case "1-0.png":
+                                person.race = 0;
+                                break;
+                            case "1-1.png":
+                                person.race = 0;
+                                break;
+                            case "3-0.png":
+                                person.race = 1;
+                                break;
+                            case "3-1.png":
+                                person.race = 1;
+                                break;
+                            case "4-0.png":
+                                person.race = 2;
+                                break;
+                            case "4-1.png":
+                                person.race = 2;
+                                break;
+                            case "7-0.png":
+                                person.race = 3;
+                                break;
+                            case "7-1.png":
+                                person.race = 3;
+                                break;
+                            case "11-1.png":
+                                person.race = 4;
+                                break;
+                            case "11-0.png":
+                                person.race = 4;
+                                break;
+                            case "2-0.png":
+                                person.race = 5;
+                                break;
+                            case "2-1.png":
+                                person.race = 5;
+                                break;
+                            case "5-0.png":
+                                person.race = 6;
+                                break;
+                            case "5-1.png":
+                                person.race = 6;
+                                break;
+                            case "6-0.png":
+                                person.race = 7;
+                                break;
+                            case "6-1.png":
+                                person.race = 7;
+                                break;
+                            case "8-0.png":
+                                person.race = 8;
+                                break;
+                            case "8-1.png":
+                                person.race = 8;
+                                break;
+                            case "10-0.png":
+                                person.race = 9;
+                                break;
+                            case "10-1.png":
+                                person.race = 9;
+                                break;
+                            default:
+                                person.race = 0;
+                                break;
+                        }
+                        // class
+                        const classImgSrc = parser(this).find("img.character-class").attr("src").split("/");
+                        const classImgFile = classImgSrc[classImgSrc.length - 1];
+                        switch (classImgFile) {
+                            case "3.png":
+                                person.class = 0;
+                                break;
+                            case "9.png":
+                                person.class = 1;
+                                break;
+                            case "5.png":
+                                person.class = 2;
+                                break;
+                            case "2.png":
+                                person.class = 3;
+                                break;
+                            case "8.png":
+                                person.class = 4;
+                                break;
+                            case "4.png":
+                                person.class = 5;
+                                break;
+                            case "11.png":
+                                person.class = 6;
+                                break;
+                            case "7.png":
+                                person.class = 7;
+                                break;
+                            case "1.png":
+                                person.class = 8;
+                                break;
+                            case "6.png":
+                                person.class = 9;
+                                break;
+                            default:
+                                person.class = 0;
+                                break;
+                        }
+                        // name
+                        const name1 = parser(this).find(".character-name").children().first().children().first().text();
+                        const name2 = parser(this).children().first().children().last().text();
+                        person.name = name1 || name2;
+                        // guild
+                        person.guild = parser(this).find(".guild-name").children().first().text();
+                        // login
+                        person.login = parser(this).find('span[itemprop="name"]').text();
+                        // other
+                        parser(this)
+                            .find("td")
+                            .each(function (index, element) {
+                                if (index == 2) person.lvl = Number(parser(element).text().trim().replace(/\s/g, ""));
+                                if (index == 3) person.kills = Number(parser(element).text().trim().replace(/\s/g, ""));
+                                if (index == 6) person.ap = Number(parser(element).text().trim().replace(/\s/g, ""));
+                            });
+                        // gs
+                        person.gs = Number(parser(this).find(".gearscore > .value").text().trim().replace(/\s/g, ""));
+                        persons.push(person);
+                    });
+                    // исключить из массива persons записи с отсутствующими данными
+                    const rows = _.filter(
+                        persons,
+                        (person) => person.race >= 0 && person.class >= 0 && person.name && person.login && person.lvl
+                    );
+                    this.logger.info(`Parsed ${rows.length} characters.`);
+                    // пришла новая инфа о персонажах
+                    await Promise.allSettled(rows.map((row) => ctx.call("character.updateOrCreate", row)));
+                    // вернуть результат
+                    return {
+                        rows, // массив
+                        count: persons.length, // длина массива
+                        st: ctx.params.st, // переданное смещение
+                    };
                 };
             },
         },
